@@ -1,7 +1,6 @@
 import React from "react";
 import './sign-up.styles.scss'
 import config from "../../config";
-import axios from "axios";
 
 import CustomButton from "../custom-button/custom-button.component";
 import FormInput from "../form-input/form-input.component";
@@ -9,6 +8,7 @@ import { IconButton } from "@mui/material"
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import TextField from '@mui/material/TextField';
+import httpClient from "../../httpClient";
 
 class SignUp extends React.Component {
   constructor() {
@@ -34,7 +34,7 @@ class SignUp extends React.Component {
     
     let company_id = '';
     try {
-      await axios.post(`${config.baseUrl}/${this.props.usertype}`, {
+      await httpClient.post(`${config.baseUrl}/signup-${this.props.usertype}`, {
         name,
         email,
         password
@@ -51,7 +51,7 @@ class SignUp extends React.Component {
       console.error(error.message);
     }
 
-    if(this.props.usertype === 'company') {
+    if(this.props.usertype === 'company' && company_id !== '') {
       this.addDepartment(company_id);
       this.addPosition(company_id);
     }
@@ -62,7 +62,7 @@ class SignUp extends React.Component {
     this.state.departments.map(async dep => {
       const department = dep.department
       try {
-        await axios.post(`${config.baseUrl}/department`, {department, company_id});
+        await httpClient.post(`${config.baseUrl}/department`, {department, company_id});
       } catch (error) {
         console.error(error.message);
       }
@@ -76,7 +76,7 @@ class SignUp extends React.Component {
     this.state.positions.map(async pos => {
       const position = pos.position
       try {
-        await axios.post(`${config.baseUrl}/position`, {position, company_id});
+        await httpClient.post(`${config.baseUrl}/position`, {position, company_id});
       } catch (error) {
         console.error(error.message);
       }

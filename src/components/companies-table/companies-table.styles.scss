@@ -1,0 +1,31 @@
+.data-table {
+  margin-bottom: 50px;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+.red {
+  color: red;
+}
+
+.green {
+  color: green;
+}
+
+.orange {
+  color: rgb(255, 153, 0);
+}
+
+// tr:nth-child(even) {
+//   background-color: #dddddd;
+// }

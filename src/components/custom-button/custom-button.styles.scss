@@ -1,9 +1,9 @@
 .custom-button {
   min-width: 50px;
   width: auto;
-  height: 50px;
+  height: 40px;
   letter-spacing: 0.5px;
-  line-height: 48px;
+  line-height: 38px;
   padding: 0 15px;
   font-size: 15px;
   background-color: black;
@@ -11,9 +11,10 @@
   font-weight: bolder;
   border: 2px solid black;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   justify-content: center;
   border-radius: 10px 10px;
+  margin: 2px;
 
   &:hover {
     background-color: white;
@@ -27,6 +28,28 @@
     &:hover {
       background-color: black;
       color: white;
+    }
+  }
+
+  &.green {
+    border: 2px solid green;
+    background-color: green;
+    color: white;
+
+    &:hover {
+      background-color: white;
+      color: green;
+    }
+  }
+
+  &.red {
+    border: 2px solid red;
+    background-color: red;
+    color: white;
+
+    &:hover {
+      background-color: white;
+      color: red;
     }
   }
 }
