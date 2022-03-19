@@ -2,6 +2,7 @@ import React from "react";
 import './login.styles.scss';
 import httpClient from "../../httpClient";
 import config from "../../config";
+import {Link} from "react-router-dom";
 
 import FormInput from "../form-input/form-input.component";
 import CustomButton from "../custom-button/custom-button.component";
@@ -19,8 +20,6 @@ class Login extends React.Component {
   handleSubmit = async event => {
     event.preventDefault();
     const { email, password } = this.state;
-
-    console.log(email, password);
 
     try {
       await httpClient.post(`${config.baseUrl}/login-user`, {
@@ -69,6 +68,7 @@ class Login extends React.Component {
             required
           />
           <CustomButton type="submit">Login</CustomButton>
+          <Link className="sign-up-link" to="/signup">Don't have an account? Sign up</Link>
         </form>
       </div>
     );
