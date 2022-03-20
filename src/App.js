@@ -15,11 +15,10 @@ import './App.css';
 
 class App extends React.Component {
   getCurrentUser = async () => {
-    const { currentUser, setCurrentUser } = this.props;
+    const { setCurrentUser } = this.props;
     try {
       const response = await httpClient.get(`${config.baseUrl}/@me`);
       setCurrentUser(response.data);
-      console.log(currentUser);
     } catch(error) {
       console.log('Not Authenticated');
     }

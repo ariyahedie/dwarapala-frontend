@@ -3,6 +3,7 @@ import './homepage.styles.scss'
 import { connect } from 'react-redux';
 
 import SuperadminHomepage from "../superadmin-homepage/superadmin-homepage.component";
+import CompanyHomepage from "../company-homepage/company-homepage.component";
 import config from "../../config";
 
 class Homepage extends React.Component {
@@ -10,7 +11,7 @@ class Homepage extends React.Component {
     const { currentUser } = this.props;
     switch(currentUser.usertype) {
       case config.usertype.company:
-        return 'bar';
+        return <CompanyHomepage />;
       case config.usertype.superadmin:
         return <SuperadminHomepage />;
       case config.usertype.admin:
