@@ -27,40 +27,12 @@ class CompaniesTable extends React.Component {
     super();
 
     this.state = {
-      companiesList: [],
       open: { confirm: false, deny: false },
       row_temp: {}
     }
   }
 
-  fetchCompanies = async () => {
-    const { type } = this.props;
-    try {
-      const data = await httpClient.get(`${config.baseUrl}/company`);
-      const { companies } = data.data;
-      this.setCompaniesListWithFilter(companies, type);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  setCompaniesListWithFilter = (companies, type) => {
-    if(type === 'pending') {
-      this.setState({ companiesList: companies.filter(company => (
-        company.status === 'pending'
-      )) });
-    } else {
-      this.setState({ companiesList: companies.filter(company => (
-        company.status !== 'pending'
-      )) });
-    }
-  }
-
   handleOpen = (row_temp, key) => {
-    // if(row_temp.status === status) {
-    //   this.handleClose(key);
-    //   return;
-    // }
     this.setState({ row_temp: row_temp });
     this.setState({ open: { [key]: true } });
   }
@@ -68,12 +40,12 @@ class CompaniesTable extends React.Component {
   handleClose = (key) => {
     this.setState({ row_temp: {} });
     this.setState({ open: { [key]: false } });
+    this.props.fetchCompanies();
   }
 
   handleStatus = async (company, status, key) => {
     try{
       await httpClient.put(`${config.baseUrl}/company/${company.id}`, {status});
-      await this.fetchCompanies();
     } catch (error) {
       console.error(error.message);
     }
@@ -95,14 +67,14 @@ class CompaniesTable extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchCompanies();
+    this.props.fetchCompanies();
   }
 
   render (){
-    const { open, row_temp, companiesList } = this.state;
-    const { title } = this.props;
+    const { open, row_temp } = this.state;
+    const { title, type, companiesList } = this.props;
     return (
-      <div className={`data-table ${(companiesList.length === 0) ? 'hidden' : ''}`}>
+      <div className={`data-table ${companiesList.length === 0 ? 'hidden' : ''}`}>
         <h2>{ title }</h2>
         <table>
           <thead>
@@ -111,7 +83,10 @@ class CompaniesTable extends React.Component {
               <th>Email</th>
               <th>Status</th>
               <th>Created At</th>
-              <th></th>
+              {
+                (type === 'pending') ?
+                (<th></th>) : null
+              }
             </tr>
           </thead>
           <tbody>
@@ -122,73 +97,76 @@ class CompaniesTable extends React.Component {
                 <td>{row.email}</td>
                 <td className={`${this.statusColor(row.status)}`}>{row.status}</td>
                 <td>{row.created_at}</td>
-                <td>
-                  <Button
-                    sx={{mr: 1}}
-                    onClick={() => this.handleOpen(row, 'confirm')}
-                    variant="contained"
-                    color="success"
-                    disabled={this.handleButtonDisability(row, 'confirmed')}
-                  >
-                    <CheckCircleIcon />
-                  </Button>
-                  <Modal
-                    open={open.confirm && row_temp.id === row.id}
-                    onClose={() => this.handleClose('confirm')}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                  >
-                    <Box sx={style}>
-                      <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Confirm and authenticate {row.name} ?
-                      </Typography>
-                      <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Are you sure you want to authenticate {row.name} and send the activation email?
-                      </Typography>
-                      <Button 
-                        onClick={() => this.handleStatus(row, 'confirmed', 'confirm')}
-                        variant="contained"
-                      >
-                        Confirm
-                      </Button>
-                      <Button
-                        onClick={() => this.handleClose('confirm')}
-                        variant="outlined"
-                      >
-                        Cancel
-                      </Button>
-                    </Box>
-                  </Modal>
-                  <Button
-                    onClick={() => this.handleOpen(row, 'deny')}
-                    variant="outlined"
-                    color="error"
-                    disabled={this.handleButtonDisability(row, 'denied')}
-                  >
-                    <CancelIcon />
-                  </Button>
-                  <Modal
-                    open={open.deny && row_temp.id === row.id}
-                    onClose={() => this.handleClose('deny')}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                  >
-                    <Box sx={style}>
-                      <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Deny {row.name} ?
-                      </Typography>
-                      <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Are you sure you want to deny {row.name} and send the email?
-                      </Typography>
-                      <Button onClick={() => this.handleStatus(row, 'denied', 'deny')} variant="contained">
-                        Deny
-                      </Button>
-                      <Button onClick={() => this.handleClose('deny')} variant="outlined">
-                        Cancel
-                      </Button>
-                    </Box>
-                  </Modal>
-                </td>
+                {
+                  (type === 'pending') ?
+                  (<td>
+                    <Button
+                      sx={{mr: 1}}
+                      onClick={() => this.handleOpen(row, 'confirm')}
+                      variant="contained"
+                      color="success"
+                      disabled={this.handleButtonDisability(row, 'confirmed')}
+                    >
+                      <CheckCircleIcon />
+                    </Button>
+                    <Modal
+                      open={open.confirm && row_temp.id === row.id}
+                      onClose={() => this.handleClose('confirm')}
+                      aria-labelledby="modal-modal-title"
+                      aria-describedby="modal-modal-description"
+                    >
+                      <Box sx={style}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                          Confirm and authenticate {row.name} ?
+                        </Typography>
+                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                          Are you sure you want to authenticate {row.name} and send the activation email?
+                        </Typography>
+                        <Button 
+                          onClick={() => this.handleStatus(row, 'confirmed', 'confirm')}
+                          variant="contained"
+                        >
+                          Confirm
+                        </Button>
+                        <Button
+                          onClick={() => this.handleClose('confirm')}
+                          variant="outlined"
+                        >
+                          Cancel
+                        </Button>
+                      </Box>
+                    </Modal>
+                    <Button
+                      onClick={() => this.handleOpen(row, 'deny')}
+                      variant="outlined"
+                      color="error"
+                      disabled={this.handleButtonDisability(row, 'denied')}
+                    >
+                      <CancelIcon />
+                    </Button>
+                    <Modal
+                      open={open.deny && row_temp.id === row.id}
+                      onClose={() => this.handleClose('deny')}
+                      aria-labelledby="modal-modal-title"
+                      aria-describedby="modal-modal-description"
+                    >
+                      <Box sx={style}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                          Deny {row.name} ?
+                        </Typography>
+                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                          Are you sure you want to deny {row.name} and send the email?
+                        </Typography>
+                        <Button onClick={() => this.handleStatus(row, 'denied', 'deny')} variant="contained">
+                          Deny
+                        </Button>
+                        <Button onClick={() => this.handleClose('deny')} variant="outlined">
+                          Cancel
+                        </Button>
+                      </Box>
+                    </Modal>
+                  </td>) : null
+                }
               </tr>
             ))
           }
