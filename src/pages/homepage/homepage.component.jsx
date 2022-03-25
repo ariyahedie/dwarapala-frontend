@@ -1,10 +1,11 @@
 import React from "react";
 import './homepage.styles.scss'
 import { connect } from 'react-redux';
+import config from "../../config";
 
 import SuperadminHomepage from "../superadmin-homepage/superadmin-homepage.component";
 import CompanyHomepage from "../company-homepage/company-homepage.component";
-import config from "../../config";
+import AdminHomepage from "../admin-homepage/admin-homepage.component";
 
 class Homepage extends React.Component {
   renderSwitch = () => {
@@ -15,7 +16,7 @@ class Homepage extends React.Component {
       case config.usertype.superadmin:
         return <SuperadminHomepage />;
       case config.usertype.admin:
-        return 'bar';
+        return <AdminHomepage />;
       case config.usertype.member:
         return 'bar';
       default:

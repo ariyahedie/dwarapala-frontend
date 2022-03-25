@@ -55,10 +55,10 @@ class MembersTable extends React.Component {
     this.setState({ open: false });
   };
 
-  fetchMembers = async () => {
+  fetchMembers = async (key) => {
     const { currentUser, type } = this.props;
     try {
-      const data = await httpClient.get(`${config.baseUrl}/member/${currentUser.id}`);
+      const data = await httpClient.get(`${config.baseUrl}/member/${currentUser[key]}`);
       const { members } = data.data;
       this.setState({
         membersList: members.filter(member => 
@@ -70,10 +70,10 @@ class MembersTable extends React.Component {
     }
   };
 
-  fetchDepartments = async () => {
+  fetchDepartments = async (key) => {
     const { currentUser } = this.props;
     try {
-      const data = await httpClient.get(`${config.baseUrl}/department/${currentUser.id}`);
+      const data = await httpClient.get(`${config.baseUrl}/department/${currentUser[key]}`);
       const { departments } = data.data;
       this.setState({ departmentsList: departments });
     } catch (error) {
@@ -81,10 +81,10 @@ class MembersTable extends React.Component {
     }
   };
 
-  fetchPositions = async () => {
+  fetchPositions = async (key) => {
     const { currentUser } = this.props;
     try {
-      const data = await httpClient.get(`${config.baseUrl}/position/${currentUser.id}`);
+      const data = await httpClient.get(`${config.baseUrl}/position/${currentUser[key]}`);
       const { positions } = data.data;
       this.setState({ positionsList: positions });
     } catch (error) {
@@ -144,15 +144,23 @@ class MembersTable extends React.Component {
     }
   }
 
+  getKey = () => {
+    const { currentUser } = this.props;
+    return currentUser.usertype === config.usertype.admin ? 'company' : 'id';
+  }
+
   handleSubmit = async event => {
     event.preventDefault();
     await this.createAdminPosition();
     const { name, email, department_id, position_id } = this.state;
     const { currentUser, type } = this.props;
+    const key = this.getKey();
     const password = this.generatePassword(name, position_id, department_id);
-    const company_name = currentUser.name;
+    console.log(password);
     try {
-      await httpClient.post(`${config.baseUrl}/member/${currentUser.id}`, {
+      const response = await httpClient.get(`${config.baseUrl}/company/${currentUser[key]}`);
+      const company_name = response.data.company.name;
+      await httpClient.post(`${config.baseUrl}/member/${currentUser[key]}`, {
         usertype_name: type,
         company_name,
         position_id,
@@ -175,9 +183,10 @@ class MembersTable extends React.Component {
   };
 
   getAPI = async () => {
-    this.fetchMembers();
-    this.fetchDepartments();
-    this.fetchPositions();
+    const key = this.getKey();
+    this.fetchMembers(key);
+    this.fetchDepartments(key);
+    this.fetchPositions(key);
   }
 
   capitalizeFirstLetter = (string) => {
