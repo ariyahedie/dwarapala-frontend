@@ -14,9 +14,25 @@ class MemberHomepage extends React.Component {
     this.state = {
       company: '',
       position: '',
-      department: ''
+      department: '',
+      selectedFile: '',
+      image: 'https://fakeimg.pl/300x300/?text=Hello',
+      saveImage: '',
+      open: { confirm: false, deny: false },
+      row_temp: {}
     }
   }
+
+  // handleOpen = (row_temp, key) => {
+  //   this.setState({ row_temp: row_temp });
+  //   this.setState({ open: { [key]: true } });
+  // }
+
+  // handleClose = (key) => {
+  //   this.setState({ row_temp: {} });
+  //   this.setState({ open: { [key]: false } });
+  //   this.props.fetchCompanies();
+  // }
 
   getCompany = async () => {
     const { currentUser } = this.props;
@@ -85,6 +101,22 @@ class MemberHomepage extends React.Component {
     this.getDepartment();
   }
 
+  handleUploadChange = event => {
+    console.log(event.target.files);
+    let uploaded = event.target.files;
+    console.log(URL.createObjectURL(uploaded));
+    this.setState({ image: URL.createObjectURL(uploaded), saveImage: uploaded });
+  }
+
+  handleSubmit = async () => {
+    // const files = []
+    // files.push(this.state.saveImage);
+    httpClient.post(`${config.baseUrl}/upload_file`, {
+      files: this.state.saveImage
+    });
+    this.setState({ saveImage: '' });
+  }
+
   render() {
     const { currentUser } = this.props;
     const { company, position, department } = this.state;
@@ -98,6 +130,30 @@ class MemberHomepage extends React.Component {
           <h4>{company.name}</h4>
           <span>{position.name} | {department.name}</span>
         </div>
+        {/* <Modal
+          open={open.confirm && row_temp.id === row.id}
+          onClose={() => this.handleClose('confirm')}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        ></Modal> */}
+        
+        {/* <form onSubmit={this.handleSubmit}>
+          <div>
+            <img src={image} className="image-thumbnail" alt="" />
+          </div>
+          <div className="upload-image">
+            <input
+              type="file"
+              className="form-control"
+              id="formFile"
+              onChange={this.handleUploadChange}
+              accept="image/*"
+            />
+            <button className="submit-image" type="submit">
+              Upload picture
+            </button>
+          </div>
+        </form> */}
       </div>
     );
   }

@@ -10,9 +10,10 @@ import Header from '../components/header/header.component';
 import SignUpPage from '../pages/sign-up-page/sign-up-page.component';
 import LoginPage from '../pages/login-page/login-page.component';
 import NotFound from '../pages/not-found/not-found.component';
-import EditProfilePage from '../pages/edit-profile/edit-profile.component';
+import ProfilePage from '../pages/profile-page/profile-page.component';
 import ProtectedRoutes from './ProtectedRoutes';
 import PublicRoutes from './PublicRoutes';
+import VideoCameraPage from '../pages/video-camera-page/video-camera-page.component';
 
 class Routing extends React.Component {
   getCurrentUser = async () => {
@@ -42,7 +43,12 @@ class Routing extends React.Component {
           }/>
           <Route path='/profile' element={
             <ProtectedRoutes isAuth={currentUser}>
-              <EditProfilePage />
+              <ProfilePage />
+            </ProtectedRoutes>
+          }/>
+          <Route path='/camera' element={
+            <ProtectedRoutes isAuth={currentUser}>
+              <VideoCameraPage />
             </ProtectedRoutes>
           }/>
           <Route path='/login' element={

@@ -158,9 +158,11 @@ class Header extends React.Component {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
               >
-                <MenuItem>
-                  <Avatar /> Your Profile
-                </MenuItem>
+                <Link className="your-profile" to="/profile">
+                  <MenuItem>
+                    <Avatar /> Your Profile
+                  </MenuItem>
+                </Link>
                 <Divider />
                 {/* <MenuItem>
                   <ListItemIcon>
