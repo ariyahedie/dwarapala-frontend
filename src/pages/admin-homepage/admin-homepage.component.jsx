@@ -1,12 +1,11 @@
 import React from 'react';
 import './admin-homepage.styles.scss';
 import { Link } from 'react-router-dom';
-import httpClient from "../../httpClient";
-import config from "../../config";
 
 import MembersTable from '../../components/members-table/members-table.component';
 import VideoCameraFrontIcon from '@mui/icons-material/VideoCameraFront';
 import Button from '@mui/material/Button';
+import MembersLogTable from '../../components/members-log-table/members-log-table.component';
 
 class AdminHomepage extends React.Component {
   render() {
@@ -21,6 +20,7 @@ class AdminHomepage extends React.Component {
             Open Camera
           </Button>
         </Link>
+        <MembersLogTable />
         <MembersTable type="member" />
       </div>
     );

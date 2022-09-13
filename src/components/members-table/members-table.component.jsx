@@ -293,7 +293,6 @@ class MembersTable extends React.Component {
               <th>Email</th>
               <th>Department</th>
               <th>Position</th>
-              <th>Created At</th>
             </tr>
           </thead>
           <tbody>
@@ -304,7 +303,6 @@ class MembersTable extends React.Component {
                 <td>{member.email}</td>
                 <td>{this.getDepartment(member)}</td>
                 <td>{this.getPosition(member)}</td>
-                <td>{member.created_at}</td>
               </tr>
             ))
           }

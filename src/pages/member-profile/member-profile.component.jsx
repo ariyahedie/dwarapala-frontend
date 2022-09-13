@@ -23,7 +23,7 @@ class MemberProfile extends React.Component {
     this.setState({ 
       picCount: response.data.count
     });
-    if (response.data.count >= 8) {
+    if (response.data.count >= config.trainingImageQty) {
       this.setState({ openCam: false });
     }
   }
@@ -31,13 +31,9 @@ class MemberProfile extends React.Component {
   componentDidMount() {
     this.getPicsCount();
   }
-  
-  // componentDidUpdate() {
-  //   this.getPicsCount();
-  // }
 
   getPercentage = (value) => {
-    const percentage = value*(100/8);
+    const percentage = value*(100/config.trainingImageQty);
     return (percentage > 100) ? 100 : percentage;
   }
 
@@ -46,7 +42,7 @@ class MemberProfile extends React.Component {
     return (
       <div className="member-profile">
         {
-          picCount >= 8 ?
+          picCount >= config.trainingImageQty ?
           <>
             <h3>You have completed uploading your pictures</h3>
             <p>You can freely pass the portal</p>
@@ -59,7 +55,7 @@ class MemberProfile extends React.Component {
               sx={{my: 2, display: "block"}}
               onClick={() => this.setState({ openCam: true })}
               variant="outlined"
-              // color="success"
+              color="success"
             >
               Start Capture
             </Button>

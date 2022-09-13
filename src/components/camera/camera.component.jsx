@@ -3,7 +3,6 @@ import httpClient from '../../httpClient';
 import Webcam from 'react-webcam';
 import config from '../../config';
 import './camera.styles.scss';
-// import { connect } from 'react-redux';
 
 import CompletionBar from "../../components/completion-bar/completion-bar.component";
 import Button from '@mui/material/Button';
@@ -17,10 +16,6 @@ class Camera extends React.Component{
       picCount: 0
     }
   }
-  // const webcamRef = React.useRef(null);
-
-  // const [captureIndicator, setCaptureIndicator] = useState('');
-  // const [picCount, setPicCount] = useState(0);
 
   videoConstraints = {
     width : 300,
@@ -35,7 +30,6 @@ class Camera extends React.Component{
     }, 500);
 
     const imageSrc = this.webcamRef.current.getScreenshot();
-    // console.log(`imageSrc = ${imageSrc}`);
 
     await httpClient.post(`${config.baseUrl}/upload_image`, {
       data : imageSrc,
@@ -57,14 +51,14 @@ class Camera extends React.Component{
   }
 
   getPercentage = (value) => {
-    const percentage = value*(100/8);
+    const percentage = value*(100/config.trainingImageQty);
     return (percentage > 100) ? 100 : percentage;
   }
 
   updateEmbeddings = async () => {
     if(this.getPercentage(this.state.picCount) < 100) return;
 
-    const status = await httpClient.get(`${config.baseUrl}/update_embeddings/${this.props.currentUser.company}/${this.props.currentUser.email}`);
+    const status = await httpClient.get(`${config.baseUrl}/update_embeddings/${this.props.currentUser.company}`);
     console.log(status);
   }
 
@@ -75,10 +69,7 @@ class Camera extends React.Component{
   componentDidUpdate() {
     this.updateEmbeddings();
   }
-
-  // useEffect(() => {
-  //   getPicsCount();
-  // });
+  
   render() {
     const { captureIndicator, picCount } = this.state;
     return (
@@ -92,7 +83,6 @@ class Camera extends React.Component{
           screenshotFormat="image/jpeg"
           videoConstraints={this.videoConstraints}
         />
-        {/* <button onClick={this.capture}>Capture</button> */}
         <Button
           sx={{my: 2, display: "block"}}
           onClick={this.capture}
@@ -106,9 +96,5 @@ class Camera extends React.Component{
     );
   }
 };
-
-// const mapStateToProps = ({ user }) => ({
-//   currentUser: user.currentUser
-// });
 
 export default Camera;

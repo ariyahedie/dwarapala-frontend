@@ -77,12 +77,15 @@ class CompanyProfile extends React.Component {
     // add department and position
     this.addDepartment();
     this.addPosition();
+    // console.log('add pos')
+    setTimeout(() => {
+      // navigate to /profile
+      window.location.href = '/profile';
+    }, 500);
 
-    // navigate to /profile
-    window.location.href = '/profile';
   };
 
-  addDepartment = () => {
+  addDepartment = async () => {
     const { currentUser } = this.props;
     this.state.departmentsList.map(async dep => {
       const department = dep.department
@@ -101,10 +104,11 @@ class CompanyProfile extends React.Component {
     });
   }
 
-  addPosition = () => {
+  addPosition = async () => {
     const { currentUser } = this.props;
     this.state.positionsList.map(async pos => {
       const position = pos.position
+      // console.log(position)
       if(position === '') return;
       try {
         await httpClient.post(`${config.baseUrl}/position`, {

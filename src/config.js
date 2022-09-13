@@ -5,7 +5,8 @@ const config = {
     admin: 2,
     member: 3,
     superadmin: 4
-  }
+  },
+  trainingImageQty: 20
 }
 
 export default config;

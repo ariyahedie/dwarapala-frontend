@@ -79,22 +79,6 @@ class Header extends React.Component {
     };
   }
 
-  // getUsertype = () => {
-  //   const { currentUser } = this.props;
-  //   switch(currentUser.usertype) {
-  //     case config.usertype.admin:
-  //       return 'Admin';
-  //     case config.usertype.company:
-  //       return 'Company';
-  //     case config.usertype.member:
-  //       return 'Member';
-  //     case config.usertype.superadmin:
-  //       return 'Superadmin';
-  //     default:
-  //       return;
-  //   }
-  // }
-
   render() {
     const { currentUser } = this.props;
     const { open } = this.state;
